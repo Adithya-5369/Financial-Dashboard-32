@@ -5,168 +5,110 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { ArrowDown, ArrowUp, Download, Filter, Search, SortAsc } from 'lucide-react'
+import { ArrowDown, ArrowUp, Download, Filter, Search, SortAsc } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 
-// Enhanced realistic stock data with more details
-const stocksData = [
+// Enhanced realistic crypto data
+const cryptoData = [
   {
-    ticker: "AAPL",
-    name: "Apple Inc.",
-    shares: 25,
-    avgPrice: 165.23,
-    currentPrice: 187.68,
-    value: 4692.0,
-    gain: 22.45,
-    gainPercent: 13.59,
-    sector: "Technology",
-    lastUpdated: "2 mins ago",
-    dividendYield: 0.51,
+    symbol: "BTC",
+    name: "Bitcoin",
+    amount: 0.45,
+    avgPrice: 42500.25,
+    currentPrice: 65432.18,
+    value: 29444.48,
+    gain: 22931.93,
+    gainPercent: 53.96,
+    category: "Large Cap",
+    marketCap: 1285.4,
+    volume24h: 28.5,
   },
   {
-    ticker: "MSFT",
-    name: "Microsoft Corp.",
-    shares: 15,
-    avgPrice: 287.18,
-    currentPrice: 326.94,
-    value: 4904.1,
-    gain: 39.76,
-    gainPercent: 13.85,
-    sector: "Technology",
-    lastUpdated: "2 mins ago",
-    dividendYield: 0.82,
+    symbol: "ETH",
+    name: "Ethereum",
+    amount: 3.2,
+    avgPrice: 2850.75,
+    currentPrice: 3542.65,
+    value: 11336.48,
+    gain: 2213.28,
+    gainPercent: 24.62,
+    category: "Large Cap",
+    marketCap: 425.8,
+    volume24h: 15.2,
   },
   {
-    ticker: "AMZN",
-    name: "Amazon.com Inc.",
-    shares: 12,
-    avgPrice: 102.3,
-    currentPrice: 129.12,
-    value: 1549.44,
-    gain: 26.82,
-    gainPercent: 26.22,
-    sector: "Consumer Discretionary",
-    lastUpdated: "2 mins ago",
-    dividendYield: 0,
+    symbol: "SOL",
+    name: "Solana",
+    amount: 25.0,
+    avgPrice: 85.42,
+    currentPrice: 142.35,
+    value: 3558.75,
+    gain: 1423.25,
+    gainPercent: 66.65,
+    category: "Large Cap",
+    marketCap: 62.5,
+    volume24h: 4.8,
   },
   {
-    ticker: "GOOGL",
-    name: "Alphabet Inc.",
-    shares: 8,
-    avgPrice: 123.48,
-    currentPrice: 142.65,
-    value: 1141.2,
-    gain: 19.17,
-    gainPercent: 15.53,
-    sector: "Communication Services",
-    lastUpdated: "2 mins ago",
-    dividendYield: 0,
+    symbol: "ADA",
+    name: "Cardano",
+    amount: 1500.0,
+    avgPrice: 0.52,
+    currentPrice: 0.45,
+    value: 675.0,
+    gain: -105.0,
+    gainPercent: -13.46,
+    category: "Large Cap",
+    marketCap: 16.2,
+    volume24h: 0.85,
   },
   {
-    ticker: "NVDA",
-    name: "NVIDIA Corp.",
-    shares: 20,
-    avgPrice: 267.4,
-    currentPrice: 435.2,
-    value: 8704.0,
-    gain: 167.8,
-    gainPercent: 62.75,
-    sector: "Technology",
-    lastUpdated: "2 mins ago",
-    dividendYield: 0.05,
+    symbol: "DOT",
+    name: "Polkadot",
+    amount: 120.0,
+    avgPrice: 12.35,
+    currentPrice: 7.85,
+    value: 942.0,
+    gain: -540.0,
+    gainPercent: -36.44,
+    category: "Mid Cap",
+    marketCap: 9.8,
+    volume24h: 0.42,
   },
   {
-    ticker: "JNJ",
-    name: "Johnson & Johnson",
-    shares: 10,
-    avgPrice: 165.5,
-    currentPrice: 152.64,
-    value: 1526.4,
-    gain: -12.86,
-    gainPercent: -7.77,
-    sector: "Healthcare",
-    lastUpdated: "2 mins ago",
-    dividendYield: 3.12,
-  },
-  {
-    ticker: "JPM",
-    name: "JPMorgan Chase",
-    shares: 12,
-    avgPrice: 145.25,
-    currentPrice: 169.78,
-    value: 2037.36,
-    gain: 24.53,
-    gainPercent: 16.89,
-    sector: "Financial",
-    lastUpdated: "2 mins ago",
-    dividendYield: 2.45,
-  },
-  {
-    ticker: "V",
-    name: "Visa Inc.",
-    shares: 18,
-    avgPrice: 210.75,
-    currentPrice: 245.32,
-    value: 4415.76,
-    gain: 34.57,
-    gainPercent: 16.40,
-    sector: "Financial",
-    lastUpdated: "2 mins ago",
-    dividendYield: 0.75,
-  },
-  {
-    ticker: "PG",
-    name: "Procter & Gamble",
-    shares: 15,
-    avgPrice: 142.30,
-    currentPrice: 156.78,
-    value: 2351.70,
-    gain: 14.48,
-    gainPercent: 10.18,
-    sector: "Consumer Staples",
-    lastUpdated: "2 mins ago",
-    dividendYield: 2.38,
-  },
-  {
-    ticker: "DIS",
-    name: "Walt Disney Co.",
-    shares: 22,
-    avgPrice: 98.45,
-    currentPrice: 112.34,
-    value: 2471.48,
-    gain: 13.89,
-    gainPercent: 14.11,
-    sector: "Communication Services",
-    lastUpdated: "2 mins ago",
-    dividendYield: 0,
-  },
-  {
-    ticker: "KO",
-    name: "Coca-Cola Co.",
-    shares: 30,
-    avgPrice: 58.20,
-    currentPrice: 62.45,
-    value: 1873.50,
-    gain: 4.25,
-    gainPercent: 7.30,
-    sector: "Consumer Staples",
-    lastUpdated: "2 mins ago",
-    dividendYield: 2.85,
+    symbol: "LINK",
+    name: "Chainlink",
+    amount: 75.0,
+    avgPrice: 15.25,
+    currentPrice: 18.45,
+    value: 1383.75,
+    gain: 240.0,
+    gainPercent: 20.98,
+    category: "Mid Cap",
+    marketCap: 10.5,
+    volume24h: 0.65,
   },
 ]
 
-export function PortfolioStocks({ fullWidth = false }: { fullWidth?: boolean }) {
+export function CryptoHoldings() {
   const [searchQuery, setSearchQuery] = useState("")
   const [sortField, setSortField] = useState("value")
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc")
-  const [sectorFilter, setSectorFilter] = useState("all")
+  const [categoryFilter, setCategoryFilter] = useState("all")
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
       maximumFractionDigits: 2,
+    }).format(amount)
+  }
+
+  const formatCrypto = (amount: number) => {
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 8,
     }).format(amount)
   }
 
@@ -179,16 +121,16 @@ export function PortfolioStocks({ fullWidth = false }: { fullWidth?: boolean }) 
     }
   }
 
-  // Get unique sectors for filter
-  const sectors = ["all", ...new Set(stocksData.map((stock) => stock.sector))]
+  // Get unique categories for filter
+  const categories = ["all", ...new Set(cryptoData.map((crypto) => crypto.category))]
 
-  const filteredStocks = stocksData
-    .filter((stock) => {
+  const filteredCrypto = cryptoData
+    .filter((crypto) => {
       const matchesSearch =
-        stock.ticker.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        stock.name.toLowerCase().includes(searchQuery.toLowerCase())
-      const matchesSector = sectorFilter === "all" || stock.sector === sectorFilter
-      return matchesSearch && matchesSector
+        crypto.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        crypto.name.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesCategory = categoryFilter === "all" || crypto.category === categoryFilter
+      return matchesSearch && matchesCategory
     })
     .sort((a, b) => {
       const fieldA = a[sortField as keyof typeof a]
@@ -204,16 +146,16 @@ export function PortfolioStocks({ fullWidth = false }: { fullWidth?: boolean }) 
     })
 
   // Calculate totals
-  const totalValue = filteredStocks.reduce((sum, stock) => sum + stock.value, 0)
-  const totalGain = filteredStocks.reduce((sum, stock) => sum + stock.gain * stock.shares, 0)
+  const totalValue = filteredCrypto.reduce((sum, crypto) => sum + crypto.value, 0)
+  const totalGain = filteredCrypto.reduce((sum, crypto) => sum + crypto.gain, 0)
   const totalGainPercent = (totalGain / (totalValue - totalGain)) * 100
 
   return (
-    <Card className={fullWidth ? "col-span-full" : ""}>
+    <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div className="space-y-1">
-          <CardTitle>Portfolio Stocks</CardTitle>
-          <CardDescription>Your current stock holdings</CardDescription>
+          <CardTitle>Crypto Holdings</CardTitle>
+          <CardDescription>Your cryptocurrency portfolio</CardDescription>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" className="hidden sm:flex">
@@ -222,7 +164,7 @@ export function PortfolioStocks({ fullWidth = false }: { fullWidth?: boolean }) 
           </Button>
           <Button variant="default" size="sm">
             <Filter className="mr-2 h-4 w-4" />
-            Add Stock
+            Add Crypto
           </Button>
         </div>
       </CardHeader>
@@ -232,20 +174,20 @@ export function PortfolioStocks({ fullWidth = false }: { fullWidth?: boolean }) 
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search stocks..."
+              placeholder="Search cryptocurrencies..."
               className="pl-8 w-full"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Select value={sectorFilter} onValueChange={setSectorFilter}>
+          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by sector" />
+              <SelectValue placeholder="Filter by category" />
             </SelectTrigger>
             <SelectContent>
-              {sectors.map((sector) => (
-                <SelectItem key={sector} value={sector}>
-                  {sector === "all" ? "All Sectors" : sector}
+              {categories.map((category) => (
+                <SelectItem key={category} value={category}>
+                  {category === "all" ? "All Categories" : category}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -282,9 +224,9 @@ export function PortfolioStocks({ fullWidth = false }: { fullWidth?: boolean }) 
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[80px] cursor-pointer" onClick={() => handleSort("ticker")}>
-                    Ticker
-                    {sortField === "ticker" &&
+                  <TableHead className="w-[80px] cursor-pointer" onClick={() => handleSort("symbol")}>
+                    Symbol
+                    {sortField === "symbol" &&
                       (sortDirection === "asc" ? (
                         <ArrowUp className="inline ml-1 h-4 w-4" />
                       ) : (
@@ -300,9 +242,9 @@ export function PortfolioStocks({ fullWidth = false }: { fullWidth?: boolean }) 
                         <ArrowDown className="inline ml-1 h-4 w-4" />
                       ))}
                   </TableHead>
-                  <TableHead className="text-right cursor-pointer" onClick={() => handleSort("shares")}>
-                    Shares
-                    {sortField === "shares" &&
+                  <TableHead className="text-right cursor-pointer" onClick={() => handleSort("amount")}>
+                    Amount
+                    {sortField === "amount" &&
                       (sortDirection === "asc" ? (
                         <ArrowUp className="inline ml-1 h-4 w-4" />
                       ) : (
@@ -336,23 +278,23 @@ export function PortfolioStocks({ fullWidth = false }: { fullWidth?: boolean }) 
                         <ArrowDown className="inline ml-1 h-4 w-4" />
                       ))}
                   </TableHead>
-                  <TableHead className="text-right hidden md:table-cell">Sector</TableHead>
+                  <TableHead className="text-right hidden md:table-cell">Category</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredStocks.map((stock) => (
-                  <TableRow key={stock.ticker} className="cursor-pointer hover:bg-muted/50">
-                    <TableCell className="font-medium">{stock.ticker}</TableCell>
-                    <TableCell>{stock.name}</TableCell>
-                    <TableCell className="text-right">{stock.shares}</TableCell>
-                    <TableCell className="text-right">{formatCurrency(stock.currentPrice)}</TableCell>
-                    <TableCell className="text-right">{formatCurrency(stock.value)}</TableCell>
-                    <TableCell className={`text-right ${stock.gain >= 0 ? "text-green-500" : "text-red-500"}`}>
-                      {stock.gain >= 0 ? "+" : ""}
-                      {stock.gainPercent.toFixed(2)}%
+                {filteredCrypto.map((crypto) => (
+                  <TableRow key={crypto.symbol} className="cursor-pointer hover:bg-muted/50">
+                    <TableCell className="font-medium">{crypto.symbol}</TableCell>
+                    <TableCell>{crypto.name}</TableCell>
+                    <TableCell className="text-right">{formatCrypto(crypto.amount)}</TableCell>
+                    <TableCell className="text-right">{formatCurrency(crypto.currentPrice)}</TableCell>
+                    <TableCell className="text-right">{formatCurrency(crypto.value)}</TableCell>
+                    <TableCell className={`text-right ${crypto.gain >= 0 ? "text-green-500" : "text-red-500"}`}>
+                      {crypto.gain >= 0 ? "+" : ""}
+                      {crypto.gainPercent.toFixed(2)}%
                     </TableCell>
                     <TableCell className="text-right hidden md:table-cell">
-                      <Badge variant="outline">{stock.sector}</Badge>
+                      <Badge variant="outline">{crypto.category}</Badge>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -363,9 +305,9 @@ export function PortfolioStocks({ fullWidth = false }: { fullWidth?: boolean }) 
 
         <div className="flex flex-col sm:flex-row justify-between items-center mt-4 text-sm text-muted-foreground">
           <span>
-            Showing {filteredStocks.length} of {stocksData.length} stocks
+            Showing {filteredCrypto.length} of {cryptoData.length} cryptocurrencies
           </span>
-          <span>Last updated: 2 minutes ago</span>
+          <span>Last updated: 1 minute ago</span>
         </div>
       </CardContent>
     </Card>

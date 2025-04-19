@@ -5,162 +5,110 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { ArrowDown, ArrowUp, Download, Filter, Search, SortAsc } from 'lucide-react'
+import { ArrowDown, ArrowUp, Download, Filter, Search, SortAsc } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 
-// Enhanced realistic stock data with more details
-const stocksData = [
+// Enhanced realistic ETF data
+const etfsData = [
   {
-    ticker: "AAPL",
-    name: "Apple Inc.",
-    shares: 25,
-    avgPrice: 165.23,
-    currentPrice: 187.68,
-    value: 4692.0,
-    gain: 22.45,
-    gainPercent: 13.59,
-    sector: "Technology",
-    lastUpdated: "2 mins ago",
-    dividendYield: 0.51,
+    ticker: "VOO",
+    name: "Vanguard S&P 500 ETF",
+    shares: 35,
+    avgPrice: 375.42,
+    currentPrice: 412.65,
+    value: 14442.75,
+    gain: 37.23,
+    gainPercent: 9.92,
+    category: "Large Cap",
+    expenseRatio: 0.03,
+    dividendYield: 1.42,
   },
   {
-    ticker: "MSFT",
-    name: "Microsoft Corp.",
+    ticker: "VTI",
+    name: "Vanguard Total Stock Market ETF",
+    shares: 28,
+    avgPrice: 210.35,
+    currentPrice: 235.78,
+    value: 6601.84,
+    gain: 25.43,
+    gainPercent: 12.09,
+    category: "Total Market",
+    expenseRatio: 0.03,
+    dividendYield: 1.35,
+  },
+  {
+    ticker: "QQQ",
+    name: "Invesco QQQ Trust",
     shares: 15,
-    avgPrice: 287.18,
-    currentPrice: 326.94,
-    value: 4904.1,
-    gain: 39.76,
-    gainPercent: 13.85,
-    sector: "Technology",
-    lastUpdated: "2 mins ago",
-    dividendYield: 0.82,
+    avgPrice: 325.68,
+    currentPrice: 378.42,
+    value: 5676.3,
+    gain: 52.74,
+    gainPercent: 16.19,
+    category: "Technology",
+    expenseRatio: 0.2,
+    dividendYield: 0.58,
   },
   {
-    ticker: "AMZN",
-    name: "Amazon.com Inc.",
+    ticker: "VGT",
+    name: "Vanguard Information Technology ETF",
     shares: 12,
-    avgPrice: 102.3,
-    currentPrice: 129.12,
-    value: 1549.44,
-    gain: 26.82,
-    gainPercent: 26.22,
-    sector: "Consumer Discretionary",
-    lastUpdated: "2 mins ago",
-    dividendYield: 0,
+    avgPrice: 410.25,
+    currentPrice: 465.32,
+    value: 5583.84,
+    gain: 55.07,
+    gainPercent: 13.42,
+    category: "Technology",
+    expenseRatio: 0.1,
+    dividendYield: 0.65,
   },
   {
-    ticker: "GOOGL",
-    name: "Alphabet Inc.",
-    shares: 8,
-    avgPrice: 123.48,
-    currentPrice: 142.65,
-    value: 1141.2,
-    gain: 19.17,
-    gainPercent: 15.53,
-    sector: "Communication Services",
-    lastUpdated: "2 mins ago",
-    dividendYield: 0,
+    ticker: "VYM",
+    name: "Vanguard High Dividend Yield ETF",
+    shares: 25,
+    avgPrice: 105.42,
+    currentPrice: 112.35,
+    value: 2808.75,
+    gain: 6.93,
+    gainPercent: 6.57,
+    category: "Dividend",
+    expenseRatio: 0.06,
+    dividendYield: 2.95,
   },
   {
-    ticker: "NVDA",
-    name: "NVIDIA Corp.",
-    shares: 20,
-    avgPrice: 267.4,
-    currentPrice: 435.2,
-    value: 8704.0,
-    gain: 167.8,
-    gainPercent: 62.75,
-    sector: "Technology",
-    lastUpdated: "2 mins ago",
-    dividendYield: 0.05,
-  },
-  {
-    ticker: "JNJ",
-    name: "Johnson & Johnson",
-    shares: 10,
-    avgPrice: 165.5,
-    currentPrice: 152.64,
-    value: 1526.4,
-    gain: -12.86,
-    gainPercent: -7.77,
-    sector: "Healthcare",
-    lastUpdated: "2 mins ago",
+    ticker: "VXUS",
+    name: "Vanguard Total International Stock ETF",
+    shares: 40,
+    avgPrice: 54.25,
+    currentPrice: 58.42,
+    value: 2336.8,
+    gain: 4.17,
+    gainPercent: 7.69,
+    category: "International",
+    expenseRatio: 0.08,
     dividendYield: 3.12,
   },
   {
-    ticker: "JPM",
-    name: "JPMorgan Chase",
-    shares: 12,
-    avgPrice: 145.25,
-    currentPrice: 169.78,
-    value: 2037.36,
-    gain: 24.53,
-    gainPercent: 16.89,
-    sector: "Financial",
-    lastUpdated: "2 mins ago",
-    dividendYield: 2.45,
-  },
-  {
-    ticker: "V",
-    name: "Visa Inc.",
-    shares: 18,
-    avgPrice: 210.75,
-    currentPrice: 245.32,
-    value: 4415.76,
-    gain: 34.57,
-    gainPercent: 16.40,
-    sector: "Financial",
-    lastUpdated: "2 mins ago",
-    dividendYield: 0.75,
-  },
-  {
-    ticker: "PG",
-    name: "Procter & Gamble",
-    shares: 15,
-    avgPrice: 142.30,
-    currentPrice: 156.78,
-    value: 2351.70,
-    gain: 14.48,
-    gainPercent: 10.18,
-    sector: "Consumer Staples",
-    lastUpdated: "2 mins ago",
-    dividendYield: 2.38,
-  },
-  {
-    ticker: "DIS",
-    name: "Walt Disney Co.",
-    shares: 22,
-    avgPrice: 98.45,
-    currentPrice: 112.34,
-    value: 2471.48,
-    gain: 13.89,
-    gainPercent: 14.11,
-    sector: "Communication Services",
-    lastUpdated: "2 mins ago",
-    dividendYield: 0,
-  },
-  {
-    ticker: "KO",
-    name: "Coca-Cola Co.",
-    shares: 30,
-    avgPrice: 58.20,
-    currentPrice: 62.45,
-    value: 1873.50,
-    gain: 4.25,
-    gainPercent: 7.30,
-    sector: "Consumer Staples",
-    lastUpdated: "2 mins ago",
+    ticker: "BND",
+    name: "Vanguard Total Bond Market ETF",
+    shares: 45,
+    avgPrice: 82.15,
+    currentPrice: 78.42,
+    value: 3528.9,
+    gain: -3.73,
+    gainPercent: -4.54,
+    category: "Bond",
+    expenseRatio: 0.03,
     dividendYield: 2.85,
   },
 ]
 
-export function PortfolioStocks({ fullWidth = false }: { fullWidth?: boolean }) {
+export function EtfHoldings() {
   const [searchQuery, setSearchQuery] = useState("")
   const [sortField, setSortField] = useState("value")
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc")
-  const [sectorFilter, setSectorFilter] = useState("all")
+  const [categoryFilter, setCategoryFilter] = useState("all")
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -179,16 +127,16 @@ export function PortfolioStocks({ fullWidth = false }: { fullWidth?: boolean }) 
     }
   }
 
-  // Get unique sectors for filter
-  const sectors = ["all", ...new Set(stocksData.map((stock) => stock.sector))]
+  // Get unique categories for filter
+  const categories = ["all", ...new Set(etfsData.map((etf) => etf.category))]
 
-  const filteredStocks = stocksData
-    .filter((stock) => {
+  const filteredEtfs = etfsData
+    .filter((etf) => {
       const matchesSearch =
-        stock.ticker.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        stock.name.toLowerCase().includes(searchQuery.toLowerCase())
-      const matchesSector = sectorFilter === "all" || stock.sector === sectorFilter
-      return matchesSearch && matchesSector
+        etf.ticker.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        etf.name.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesCategory = categoryFilter === "all" || etf.category === categoryFilter
+      return matchesSearch && matchesCategory
     })
     .sort((a, b) => {
       const fieldA = a[sortField as keyof typeof a]
@@ -204,16 +152,16 @@ export function PortfolioStocks({ fullWidth = false }: { fullWidth?: boolean }) 
     })
 
   // Calculate totals
-  const totalValue = filteredStocks.reduce((sum, stock) => sum + stock.value, 0)
-  const totalGain = filteredStocks.reduce((sum, stock) => sum + stock.gain * stock.shares, 0)
+  const totalValue = filteredEtfs.reduce((sum, etf) => sum + etf.value, 0)
+  const totalGain = filteredEtfs.reduce((sum, etf) => sum + etf.gain * etf.shares, 0)
   const totalGainPercent = (totalGain / (totalValue - totalGain)) * 100
 
   return (
-    <Card className={fullWidth ? "col-span-full" : ""}>
+    <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div className="space-y-1">
-          <CardTitle>Portfolio Stocks</CardTitle>
-          <CardDescription>Your current stock holdings</CardDescription>
+          <CardTitle>ETF Holdings</CardTitle>
+          <CardDescription>Your ETF portfolio</CardDescription>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" className="hidden sm:flex">
@@ -222,7 +170,7 @@ export function PortfolioStocks({ fullWidth = false }: { fullWidth?: boolean }) 
           </Button>
           <Button variant="default" size="sm">
             <Filter className="mr-2 h-4 w-4" />
-            Add Stock
+            Add ETF
           </Button>
         </div>
       </CardHeader>
@@ -232,20 +180,20 @@ export function PortfolioStocks({ fullWidth = false }: { fullWidth?: boolean }) 
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search stocks..."
+              placeholder="Search ETFs..."
               className="pl-8 w-full"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Select value={sectorFilter} onValueChange={setSectorFilter}>
+          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by sector" />
+              <SelectValue placeholder="Filter by category" />
             </SelectTrigger>
             <SelectContent>
-              {sectors.map((sector) => (
-                <SelectItem key={sector} value={sector}>
-                  {sector === "all" ? "All Sectors" : sector}
+              {categories.map((category) => (
+                <SelectItem key={category} value={category}>
+                  {category === "all" ? "All Categories" : category}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -336,23 +284,23 @@ export function PortfolioStocks({ fullWidth = false }: { fullWidth?: boolean }) 
                         <ArrowDown className="inline ml-1 h-4 w-4" />
                       ))}
                   </TableHead>
-                  <TableHead className="text-right hidden md:table-cell">Sector</TableHead>
+                  <TableHead className="text-right hidden md:table-cell">Category</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredStocks.map((stock) => (
-                  <TableRow key={stock.ticker} className="cursor-pointer hover:bg-muted/50">
-                    <TableCell className="font-medium">{stock.ticker}</TableCell>
-                    <TableCell>{stock.name}</TableCell>
-                    <TableCell className="text-right">{stock.shares}</TableCell>
-                    <TableCell className="text-right">{formatCurrency(stock.currentPrice)}</TableCell>
-                    <TableCell className="text-right">{formatCurrency(stock.value)}</TableCell>
-                    <TableCell className={`text-right ${stock.gain >= 0 ? "text-green-500" : "text-red-500"}`}>
-                      {stock.gain >= 0 ? "+" : ""}
-                      {stock.gainPercent.toFixed(2)}%
+                {filteredEtfs.map((etf) => (
+                  <TableRow key={etf.ticker} className="cursor-pointer hover:bg-muted/50">
+                    <TableCell className="font-medium">{etf.ticker}</TableCell>
+                    <TableCell>{etf.name}</TableCell>
+                    <TableCell className="text-right">{etf.shares}</TableCell>
+                    <TableCell className="text-right">{formatCurrency(etf.currentPrice)}</TableCell>
+                    <TableCell className="text-right">{formatCurrency(etf.value)}</TableCell>
+                    <TableCell className={`text-right ${etf.gain >= 0 ? "text-green-500" : "text-red-500"}`}>
+                      {etf.gain >= 0 ? "+" : ""}
+                      {etf.gainPercent.toFixed(2)}%
                     </TableCell>
                     <TableCell className="text-right hidden md:table-cell">
-                      <Badge variant="outline">{stock.sector}</Badge>
+                      <Badge variant="outline">{etf.category}</Badge>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -363,7 +311,7 @@ export function PortfolioStocks({ fullWidth = false }: { fullWidth?: boolean }) 
 
         <div className="flex flex-col sm:flex-row justify-between items-center mt-4 text-sm text-muted-foreground">
           <span>
-            Showing {filteredStocks.length} of {stocksData.length} stocks
+            Showing {filteredEtfs.length} of {etfsData.length} ETFs
           </span>
           <span>Last updated: 2 minutes ago</span>
         </div>

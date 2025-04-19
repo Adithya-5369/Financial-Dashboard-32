@@ -2,31 +2,22 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
-import { Sidebar } from "@/components/sidebar"
 import { Header } from "@/components/header"
+import { Sidebar } from "@/components/sidebar"
 
-export function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+interface DashboardLayoutProps {
+  children: React.ReactNode
+}
 
-  // Close sidebar when window is resized to desktop size
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setSidebarOpen(false)
-      }
-    }
-
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
-
+export function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <div className="flex h-screen overflow-hidden">
-      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="flex flex-col flex-1 overflow-hidden">
-        <Header onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 overflow-y-auto bg-background p-4 md:p-6">{children}</main>
+    <div className="flex min-h-screen flex-col">
+      <Header />
+      <div className="flex flex-1">
+        <Sidebar />
+        <main className="flex-1 md:ml-64">
+          <div className="container mx-auto p-4 md:p-6">{children}</div>
+        </main>
       </div>
     </div>
   )

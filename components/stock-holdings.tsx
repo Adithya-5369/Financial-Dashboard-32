@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { ArrowDown, ArrowUp, Download, Filter, Search, SortAsc } from 'lucide-react'
+import { ArrowDown, ArrowUp, Download, Filter, Search, SortAsc } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 
@@ -102,61 +102,9 @@ const stocksData = [
     lastUpdated: "2 mins ago",
     dividendYield: 2.45,
   },
-  {
-    ticker: "V",
-    name: "Visa Inc.",
-    shares: 18,
-    avgPrice: 210.75,
-    currentPrice: 245.32,
-    value: 4415.76,
-    gain: 34.57,
-    gainPercent: 16.40,
-    sector: "Financial",
-    lastUpdated: "2 mins ago",
-    dividendYield: 0.75,
-  },
-  {
-    ticker: "PG",
-    name: "Procter & Gamble",
-    shares: 15,
-    avgPrice: 142.30,
-    currentPrice: 156.78,
-    value: 2351.70,
-    gain: 14.48,
-    gainPercent: 10.18,
-    sector: "Consumer Staples",
-    lastUpdated: "2 mins ago",
-    dividendYield: 2.38,
-  },
-  {
-    ticker: "DIS",
-    name: "Walt Disney Co.",
-    shares: 22,
-    avgPrice: 98.45,
-    currentPrice: 112.34,
-    value: 2471.48,
-    gain: 13.89,
-    gainPercent: 14.11,
-    sector: "Communication Services",
-    lastUpdated: "2 mins ago",
-    dividendYield: 0,
-  },
-  {
-    ticker: "KO",
-    name: "Coca-Cola Co.",
-    shares: 30,
-    avgPrice: 58.20,
-    currentPrice: 62.45,
-    value: 1873.50,
-    gain: 4.25,
-    gainPercent: 7.30,
-    sector: "Consumer Staples",
-    lastUpdated: "2 mins ago",
-    dividendYield: 2.85,
-  },
 ]
 
-export function PortfolioStocks({ fullWidth = false }: { fullWidth?: boolean }) {
+export function StockHoldings() {
   const [searchQuery, setSearchQuery] = useState("")
   const [sortField, setSortField] = useState("value")
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc")
@@ -209,11 +157,11 @@ export function PortfolioStocks({ fullWidth = false }: { fullWidth?: boolean }) 
   const totalGainPercent = (totalGain / (totalValue - totalGain)) * 100
 
   return (
-    <Card className={fullWidth ? "col-span-full" : ""}>
+    <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div className="space-y-1">
-          <CardTitle>Portfolio Stocks</CardTitle>
-          <CardDescription>Your current stock holdings</CardDescription>
+          <CardTitle>Stock Holdings</CardTitle>
+          <CardDescription>Your current stock portfolio</CardDescription>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" className="hidden sm:flex">

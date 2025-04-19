@@ -1,10 +1,8 @@
 "use client"
 
-import { Bell, Menu, Moon, Search, Sun } from "lucide-react"
+import { Bell, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useTheme } from "next-themes"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,70 +11,79 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import Link from "next/link"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-export function Header({ onMenuClick }: { onMenuClick: () => void }) {
-  const { setTheme, theme } = useTheme()
-
+export function Header() {
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-      <Button variant="ghost" size="icon" className="md:hidden" onClick={onMenuClick}>
-        <Menu className="h-5 w-5" />
-        <span className="sr-only">Toggle menu</span>
-      </Button>
-      <div className="flex items-center gap-2">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
-            <span className="text-lg font-bold text-primary-foreground">Z</span>
-          </div>
-          <span className="hidden font-bold md:inline-block">Zenith Finance</span>
-        </Link>
-      </div>
-      <div className="ml-auto flex items-center gap-4">
-        <div className="relative hidden md:block">
+    <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:px-6">
+      <div className="hidden md:block md:w-64 md:flex-none" />
+      <div className="hidden md:flex md:flex-1 md:items-center md:gap-4 lg:gap-8">
+        <div className="relative flex-1">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input type="search" placeholder="Search..." className="w-64 rounded-full bg-muted pl-8 md:w-80" />
+          <Input
+            type="search"
+            placeholder="Search..."
+            className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
+          />
         </div>
-        <Button variant="ghost" size="icon" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-          <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">Toggle theme</span>
-        </Button>
-        <Button variant="ghost" size="icon">
-          <Bell className="h-5 w-5" />
-          <span className="sr-only">Notifications</span>
-        </Button>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="/placeholder-user.jpg" alt="User" />
-                <AvatarFallback>JD</AvatarFallback>
-              </Avatar>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href="/settings" className="flex w-full">
-                Profile
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link href="/settings" className="flex w-full">
-                Settings
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link href="/portfolio" className="flex w-full">
-                Portfolio
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Log out</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <nav className="flex items-center gap-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon" className="relative">
+                <Bell className="h-4 w-4" />
+                <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
+                  3
+                </span>
+                <span className="sr-only">Notifications</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>AAPL earnings report released</DropdownMenuItem>
+              <DropdownMenuItem>MSFT dividend payment received</DropdownMenuItem>
+              <DropdownMenuItem>Portfolio value increased by 2.5%</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src="/placeholder.svg" alt="User" />
+                  <AvatarFallback>U</AvatarFallback>
+                </Avatar>
+                <span className="sr-only">User menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Logout</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </nav>
+      </div>
+      <div className="flex md:hidden">
+        <nav className="flex items-center gap-4">
+          <Button variant="outline" size="icon" className="relative">
+            <Bell className="h-4 w-4" />
+            <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
+              3
+            </span>
+            <span className="sr-only">Notifications</span>
+          </Button>
+          <Button variant="ghost" size="icon" className="rounded-full">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src="/placeholder.svg" alt="User" />
+              <AvatarFallback>U</AvatarFallback>
+            </Avatar>
+            <span className="sr-only">User menu</span>
+          </Button>
+        </nav>
       </div>
     </header>
   )

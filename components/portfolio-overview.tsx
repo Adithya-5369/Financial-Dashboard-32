@@ -6,6 +6,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState } from "react"
+import { Area, AreaChart, ResponsiveContainer } from "recharts"
 
 export function PortfolioOverview({ fullWidth = false }: { fullWidth?: boolean }) {
   const [currency, setCurrency] = useState("USD")
@@ -37,6 +38,22 @@ export function PortfolioOverview({ fullWidth = false }: { fullWidth?: boolean }
       maximumFractionDigits: 2,
     }).format(convertedValue)
   }
+
+  // Generate historical data for the mini chart
+  const historicalData = Array(30)
+    .fill(0)
+    .map((_, i) => {
+      const baseValue = portfolioValue * 0.9
+      const range = portfolioValue * 0.2
+      const randomValue = baseValue + Math.random() * range
+      return {
+        day: i + 1,
+        value: randomValue,
+      }
+    })
+
+  // Ensure the last value matches the current portfolio value
+  historicalData[historicalData.length - 1].value = portfolioValue
 
   return (
     <Card className={fullWidth ? "col-span-full" : ""}>
@@ -79,6 +96,28 @@ export function PortfolioOverview({ fullWidth = false }: { fullWidth?: boolean }
             </Tooltip>
           </TooltipProvider>
         </div>
+
+        <div className="mt-4 h-[100px] w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={historicalData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+              <defs>
+                <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={isPositive ? "#4ade80" : "#f87171"} stopOpacity={0.8} />
+                  <stop offset="95%" stopColor={isPositive ? "#4ade80" : "#f87171"} stopOpacity={0.1} />
+                </linearGradient>
+              </defs>
+              <Area
+                type="monotone"
+                dataKey="value"
+                stroke={isPositive ? "#4ade80" : "#f87171"}
+                fillOpacity={1}
+                fill="url(#colorValue)"
+                dot={false}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+
         <div className="mt-4 grid grid-cols-2 gap-2">
           <div className="rounded-md bg-muted p-2">
             <div className="text-xs text-muted-foreground">Total Invested</div>

@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Zenith Finance - Portfolio Dashboard",
+  title: "Adithya369 Finance - Portfolio Dashboard",
   description: "Track your investments and financial portfolio",
     generator: 'v0.dev'
 }

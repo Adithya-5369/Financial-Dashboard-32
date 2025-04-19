@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight, Calendar } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar as CalendarComponent } from "@/components/ui/calendar"
 import { format } from "date-fns"
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
 export function BudgetTracker({ fullWidth = false }: { fullWidth?: boolean }) {
   const [date, setDate] = useState<Date>(new Date())
@@ -36,6 +37,13 @@ export function BudgetTracker({ fullWidth = false }: { fullWidth?: boolean }) {
     newDate.setMonth(newDate.getMonth() + 1)
     setDate(newDate)
   }
+
+  // Monthly spending data
+  const monthlySpendingData = [
+    { category: "Stocks", amount: 425.5 },
+    { category: "ETFs", amount: 137.58 },
+    { category: "Crypto", amount: 0.0 },
+  ]
 
   return (
     <Card className={fullWidth ? "col-span-full" : ""}>
@@ -94,6 +102,35 @@ export function BudgetTracker({ fullWidth = false }: { fullWidth?: boolean }) {
             indicatorClassName={isOverBudget ? "bg-red-500" : "bg-green-500"}
           />
         </div>
+
+        <div className="mt-4 h-[150px] w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={monthlySpendingData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+              <XAxis dataKey="category" />
+              <YAxis hide />
+              <Tooltip
+                content={({ active, payload, label }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div className="rounded-lg border bg-background p-2 shadow-sm">
+                        <div className="grid gap-2">
+                          <div className="font-medium">{label}</div>
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs text-muted-foreground">Amount</span>
+                            <span className="text-xs font-medium">{formatCurrency(payload[0].value as number)}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  }
+                  return null
+                }}
+              />
+              <Bar dataKey="amount" name="Amount" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
         <div className="mt-4 space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Stocks</span>

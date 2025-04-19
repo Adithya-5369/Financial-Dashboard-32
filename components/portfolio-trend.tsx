@@ -2,10 +2,21 @@
 
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Line, LineChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, ReferenceLine } from "recharts"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ReferenceLine,
+  Tooltip,
+  Area,
+  AreaChart,
+} from "recharts"
 import { Button } from "@/components/ui/button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { AreaChartIcon, LineChartIcon } from "lucide-react"
 
 // Mock portfolio trend data
 const generateTrendData = (period: string) => {
@@ -48,11 +59,21 @@ const annotations = [
   { date: "Fri", value: 125863, label: "Market Rally", description: "Tech sector rallied on positive economic data" },
 ]
 
+// Generate market comparison data
+const generateMarketComparisonData = (period: string) => {
+  const baseData = generateTrendData(period)
+  return baseData.map((item) => ({
+    ...item,
+    market: item.value * (0.9 + Math.random() * 0.2), // Random market value around portfolio value
+  }))
+}
+
 export function PortfolioTrend({ fullWidth = false }: { fullWidth?: boolean }) {
   const [period, setPeriod] = useState("1W")
   const [showMarketIndex, setShowMarketIndex] = useState(false)
+  const [chartType, setChartType] = useState<"line" | "area">("area")
 
-  const trendData = generateTrendData(period)
+  const trendData = showMarketIndex ? generateMarketComparisonData(period) : generateTrendData(period)
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -88,7 +109,7 @@ export function PortfolioTrend({ fullWidth = false }: { fullWidth?: boolean }) {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
           <div>
             <div className="text-2xl font-bold">{formatCurrency(endValue)}</div>
             <div className={`flex items-center text-sm ${isPositive ? "text-green-500" : "text-red-500"}`}>
@@ -98,30 +119,39 @@ export function PortfolioTrend({ fullWidth = false }: { fullWidth?: boolean }) {
               <span className="text-muted-foreground ml-2">{period}</span>
             </div>
           </div>
-          <ToggleGroup type="single" value={period} onValueChange={(value) => value && setPeriod(value)}>
-            <ToggleGroupItem value="1W">1W</ToggleGroupItem>
-            <ToggleGroupItem value="1M">1M</ToggleGroupItem>
-            <ToggleGroupItem value="3M">3M</ToggleGroupItem>
-            <ToggleGroupItem value="6M">6M</ToggleGroupItem>
-            <ToggleGroupItem value="1Y">1Y</ToggleGroupItem>
-            <ToggleGroupItem value="All">All</ToggleGroupItem>
-          </ToggleGroup>
+          <div className="flex flex-wrap gap-2">
+            <div className="flex gap-1 mr-2">
+              <Button
+                variant={chartType === "line" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setChartType("line")}
+                className="h-8 w-8 p-0"
+              >
+                <LineChartIcon className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={chartType === "area" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setChartType("area")}
+                className="h-8 w-8 p-0"
+              >
+                <AreaChartIcon className="h-4 w-4" />
+              </Button>
+            </div>
+            <ToggleGroup type="single" value={period} onValueChange={(value) => value && setPeriod(value)}>
+              <ToggleGroupItem value="1W">1W</ToggleGroupItem>
+              <ToggleGroupItem value="1M">1M</ToggleGroupItem>
+              <ToggleGroupItem value="3M">3M</ToggleGroupItem>
+              <ToggleGroupItem value="6M">6M</ToggleGroupItem>
+              <ToggleGroupItem value="1Y">1Y</ToggleGroupItem>
+              <ToggleGroupItem value="All">All</ToggleGroupItem>
+            </ToggleGroup>
+          </div>
         </div>
+
         <div className="h-[300px]">
-          <ChartContainer
-            config={{
-              portfolio: {
-                label: "Portfolio Value",
-                color: "hsl(var(--primary))",
-              },
-              market: {
-                label: "S&P 500",
-                color: "hsl(var(--muted-foreground))",
-                strokeDasharray: "4 4",
-              },
-            }}
-          >
-            <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%">
+            {chartType === "line" ? (
               <LineChart data={trendData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis
@@ -138,26 +168,48 @@ export function PortfolioTrend({ fullWidth = false }: { fullWidth?: boolean }) {
                   axisLine={false}
                   tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
                 />
-                <ChartTooltip content={<ChartTooltipContent />} />
+                <Tooltip
+                  content={({ active, payload, label }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <div className="rounded-lg border bg-background p-2 shadow-sm">
+                          <div className="grid gap-2">
+                            <div className="font-medium">{label}</div>
+                            {payload.map((entry, index) => (
+                              <div key={index} className="flex items-center justify-between gap-2">
+                                <div className="flex items-center gap-1">
+                                  <div className="h-2 w-2 rounded-full" style={{ backgroundColor: entry.color }} />
+                                  <span className="text-xs text-muted-foreground">{entry.name}</span>
+                                </div>
+                                <span className="text-xs font-medium">{formatCurrency(entry.value as number)}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )
+                    }
+                    return null
+                  }}
+                />
                 <Line
                   type="monotone"
                   dataKey="value"
-                  name="portfolio"
+                  name="Portfolio"
                   strokeWidth={2}
                   dot={false}
-                  activeDot={{ r: 6, fill: "hsl(var(--primary))" }}
-                  stroke="var(--color-portfolio)"
+                  activeDot={{ r: 6 }}
+                  stroke="hsl(var(--primary))"
                 />
                 {showMarketIndex && (
                   <Line
                     type="monotone"
-                    dataKey={(entry) => entry.value * 0.95 + Math.random() * 5000}
-                    name="market"
+                    dataKey="market"
+                    name="S&P 500"
                     strokeWidth={2}
                     strokeDasharray="4 4"
                     dot={false}
-                    activeDot={{ r: 6, fill: "hsl(var(--muted-foreground))" }}
-                    stroke="var(--color-market)"
+                    activeDot={{ r: 6 }}
+                    stroke="hsl(var(--muted-foreground))"
                   />
                 )}
                 {period === "1W" &&
@@ -176,9 +228,99 @@ export function PortfolioTrend({ fullWidth = false }: { fullWidth?: boolean }) {
                     />
                   ))}
               </LineChart>
-            </ResponsiveContainer>
-          </ChartContainer>
+            ) : (
+              <AreaChart data={trendData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+                <defs>
+                  <linearGradient id="colorPortfolio" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.1} />
+                  </linearGradient>
+                  <linearGradient id="colorMarket" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="hsl(var(--muted-foreground))" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="hsl(var(--muted-foreground))" stopOpacity={0.1} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis
+                  dataKey="date"
+                  stroke="hsl(var(--muted-foreground))"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  stroke="hsl(var(--muted-foreground))"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
+                />
+                <Tooltip
+                  content={({ active, payload, label }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <div className="rounded-lg border bg-background p-2 shadow-sm">
+                          <div className="grid gap-2">
+                            <div className="font-medium">{label}</div>
+                            {payload.map((entry, index) => (
+                              <div key={index} className="flex items-center justify-between gap-2">
+                                <div className="flex items-center gap-1">
+                                  <div className="h-2 w-2 rounded-full" style={{ backgroundColor: entry.color }} />
+                                  <span className="text-xs text-muted-foreground">{entry.name}</span>
+                                </div>
+                                <span className="text-xs font-medium">{formatCurrency(entry.value as number)}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )
+                    }
+                    return null
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="value"
+                  name="Portfolio"
+                  stroke="hsl(var(--primary))"
+                  fillOpacity={1}
+                  fill="url(#colorPortfolio)"
+                  dot={false}
+                  activeDot={{ r: 6 }}
+                />
+                {showMarketIndex && (
+                  <Area
+                    type="monotone"
+                    dataKey="market"
+                    name="S&P 500"
+                    stroke="hsl(var(--muted-foreground))"
+                    fillOpacity={0.5}
+                    fill="url(#colorMarket)"
+                    dot={false}
+                    activeDot={{ r: 6 }}
+                    strokeDasharray="4 4"
+                  />
+                )}
+                {period === "1W" &&
+                  annotations.map((annotation, index) => (
+                    <ReferenceLine
+                      key={index}
+                      x={annotation.date}
+                      stroke="hsl(var(--primary))"
+                      strokeDasharray="3 3"
+                      label={{
+                        value: annotation.label,
+                        position: "top",
+                        fill: "hsl(var(--primary))",
+                        fontSize: 12,
+                      }}
+                    />
+                  ))}
+              </AreaChart>
+            )}
+          </ResponsiveContainer>
         </div>
+
         {period === "1W" && (
           <div className="mt-4 space-y-2 text-sm">
             <h4 className="font-medium">Key Events</h4>

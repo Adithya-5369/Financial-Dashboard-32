@@ -1,199 +1,219 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   BarChart3,
-  Bell,
-  ChevronDown,
+  Briefcase,
   CreditCard,
   DollarSign,
   Home,
   LineChart,
-  List,
   PieChart,
   Settings,
+  Bell,
   Target,
-  Wallet,
+  Menu,
   X,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
-interface SidebarProps {
-  open: boolean
-  onClose: () => void
-}
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function Sidebar({ open, onClose }: SidebarProps) {
+export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname()
-  const [portfolioOpen, setPortfolioOpen] = useState(true)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
-  // Close sidebar on route change on mobile
   useEffect(() => {
-    if (open) {
-      onClose()
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768)
     }
+
+    // Initial check
+    checkIfMobile()
+
+    // Add event listener
+    window.addEventListener("resize", checkIfMobile)
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("resize", checkIfMobile)
+    }
+  }, [])
+
+  // Close mobile menu when path changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false)
   }, [pathname])
 
-  const routes = [
+  const isActive = (path: string) => {
+    if (path === "/") {
+      return pathname === path
+    }
+    return pathname?.startsWith(path)
+  }
+
+  const isSubActive = (path: string) => {
+    return pathname === path
+  }
+
+  const mainNavItems = [
     {
-      label: "Dashboard",
-      icon: Home,
+      title: "Dashboard",
       href: "/",
-      active: pathname === "/",
+      icon: Home,
     },
     {
-      label: "Portfolio",
-      icon: Wallet,
+      title: "Portfolio",
       href: "/portfolio",
-      active: pathname === "/portfolio" || pathname.startsWith("/portfolio/"),
-      submenu: true,
-      submenuOpen: portfolioOpen,
-      submenuItems: [
-        { label: "Overview", href: "/portfolio", active: pathname === "/portfolio" },
-        { label: "Stocks", href: "/portfolio/stocks", active: pathname === "/portfolio/stocks" },
-        { label: "ETFs", href: "/portfolio/etfs", active: pathname === "/portfolio/etfs" },
-        { label: "Crypto", href: "/portfolio/crypto", active: pathname === "/portfolio/crypto" },
+      icon: Briefcase,
+      subItems: [
+        {
+          title: "Overview",
+          href: "/portfolio",
+        },
+        {
+          title: "Stocks",
+          href: "/portfolio/stocks",
+        },
+        {
+          title: "ETFs",
+          href: "/portfolio/etfs",
+        },
+        {
+          title: "Crypto",
+          href: "/portfolio/crypto",
+        },
       ],
     },
     {
-      label: "Transactions",
-      icon: CreditCard,
+      title: "Transactions",
       href: "/transactions",
-      active: pathname === "/transactions",
+      icon: CreditCard,
     },
     {
-      label: "Budget",
-      icon: DollarSign,
+      title: "Budget",
       href: "/budget",
-      active: pathname === "/budget",
+      icon: DollarSign,
     },
     {
-      label: "Forecast",
-      icon: LineChart,
+      title: "Forecast",
       href: "/forecast",
-      active: pathname === "/forecast",
+      icon: LineChart,
     },
     {
-      label: "Sector Allocation",
-      icon: PieChart,
+      title: "Sectors",
       href: "/sectors",
-      active: pathname === "/sectors",
+      icon: PieChart,
     },
     {
-      label: "Performance",
-      icon: BarChart3,
+      title: "Performance",
       href: "/performance",
-      active: pathname === "/performance",
+      icon: BarChart3,
     },
     {
-      label: "Watchlist",
-      icon: List,
+      title: "Watchlist",
       href: "/watchlist",
-      active: pathname === "/watchlist",
-    },
-    {
-      label: "Goals",
       icon: Target,
-      href: "/goals",
-      active: pathname === "/goals",
     },
     {
-      label: "Alerts",
-      icon: Bell,
+      title: "Alerts",
       href: "/alerts",
-      active: pathname === "/alerts",
+      icon: Bell,
     },
     {
-      label: "Settings",
-      icon: Settings,
+      title: "Settings",
       href: "/settings",
-      active: pathname === "/settings",
+      icon: Settings,
     },
   ]
 
   return (
     <>
+      {/* Mobile Menu Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="md:hidden fixed top-4 left-4 z-50"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+      >
+        {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+      </Button>
+
+      {/* Sidebar */}
       <div
-        className={cn("fixed inset-0 z-50 bg-background/80 backdrop-blur-sm md:hidden", open ? "block" : "hidden")}
-        onClick={onClose}
-      />
-      <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 border-r bg-card transition-transform md:translate-x-0",
-          open ? "translate-x-0" : "-translate-x-full",
+          "fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r bg-background transition-transform duration-300 md:translate-x-0",
+          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full",
+          className,
         )}
       >
-        <div className="flex h-16 items-center justify-between border-b px-4">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
-              <span className="text-lg font-bold text-primary-foreground">Z</span>
-            </div>
-            <span className="font-bold">Zenith Finance</span>
+        <div className="flex h-14 items-center border-b px-4">
+          <Link href="/" className="flex items-center gap-2 font-semibold">
+            <DollarSign className="h-5 w-5 text-primary" />
+            <span>Adithya369 Finance</span>
           </Link>
-          <Button variant="ghost" size="icon" className="md:hidden" onClick={onClose}>
-            <X className="h-5 w-5" />
-            <span className="sr-only">Close sidebar</span>
-          </Button>
         </div>
-        <ScrollArea className="h-[calc(100vh-4rem)]">
-          <div className="px-3 py-4">
-            <nav className="flex flex-col gap-1">
-              {routes.map((route, i) =>
-                route.submenu ? (
-                  <div key={i} className="flex flex-col">
-                    <Button
-                      variant="ghost"
-                      className={cn(
-                        "flex w-full items-center justify-between px-3 py-2 text-muted-foreground",
-                        route.active && "bg-muted text-foreground",
-                      )}
-                      onClick={() => setPortfolioOpen(!portfolioOpen)}
-                    >
-                      <div className="flex items-center gap-3">
-                        <route.icon className="h-4 w-4" />
-                        {route.label}
-                      </div>
-                      <ChevronDown className={cn("h-4 w-4 transition-transform", portfolioOpen && "rotate-180")} />
-                    </Button>
-                    {portfolioOpen && (
-                      <div className="ml-4 mt-1 flex flex-col gap-1 pl-4 border-l">
-                        {route.submenuItems?.map((item, j) => (
-                          <Link
-                            key={j}
-                            href={item.href}
-                            className={cn(
-                              "flex items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground",
-                              item.active && "bg-muted text-foreground",
-                            )}
-                          >
-                            {item.label}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
+        <ScrollArea className="flex-1 py-2">
+          <nav className="grid gap-1 px-2">
+            {mainNavItems.map((item, index) => (
+              <div key={index}>
+                <Link
+                  href={item.href}
+                  className={cn(
+                    "group flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
+                    isActive(item.href) && "bg-accent text-accent-foreground",
+                  )}
+                >
+                  <item.icon className="h-4 w-4" />
+                  <span>{item.title}</span>
+                </Link>
+                {item.subItems && isActive(item.href) && (
+                  <div className="ml-6 mt-1 grid gap-1">
+                    {item.subItems.map((subItem, subIndex) => (
+                      <Link
+                        key={subIndex}
+                        href={subItem.href}
+                        className={cn(
+                          "flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
+                          isSubActive(subItem.href) && "bg-accent/50 text-accent-foreground",
+                        )}
+                      >
+                        <span>{subItem.title}</span>
+                      </Link>
+                    ))}
                   </div>
-                ) : (
-                  <Link
-                    key={i}
-                    href={route.href}
-                    className={cn(
-                      "flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground hover:bg-muted hover:text-foreground",
-                      route.active && "bg-muted text-foreground",
-                    )}
-                  >
-                    <route.icon className="h-4 w-4" />
-                    {route.label}
-                  </Link>
-                ),
-              )}
-            </nav>
-          </div>
+                )}
+              </div>
+            ))}
+          </nav>
         </ScrollArea>
-      </aside>
+        <div className="mt-auto border-t p-4">
+          <div className="flex items-center gap-2 text-sm">
+            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+              <span className="font-medium text-primary">AF</span>
+            </div>
+            <div>
+              <p className="font-medium">Adithya369 Finance</p>
+              <p className="text-xs text-muted-foreground">v1.0.0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Overlay for mobile */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-background/80 backdrop-blur-sm md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
     </>
   )
 }
