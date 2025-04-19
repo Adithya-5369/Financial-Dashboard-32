@@ -5,7 +5,7 @@
 
 ## 🚀 Overview
 
-This frontend-only Financial Portfolio Dashboard was built as a hackathon project in response to the challenge:
+This frontend-only Financial Portfolio Dashboard was built as a [hackathon](https://docs.google.com/document/d/1TlPmewnFYFvcEnAF1yduimY025AzMHXbWzLz6VnXODk/) project in response to the challenge:
 > *“Build a financial portfolio dashboard with stock performance charts.”*
 
 This frontend-only application provides a comprehensive and real-time overview of a user’s investment portfolio. It’s designed with a modern UI and intuitive UX to help users visualize, analyze, and explore their stock performance.
