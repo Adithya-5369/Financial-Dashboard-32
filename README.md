@@ -97,7 +97,7 @@ This frontend-only application provides a comprehensive and real-time overview o
 ## 📌 Contributing & Feedback
 
 Have an idea or want to contribute? Open an issue or PR on [GitHub](https://github.com/Adithya-5369/Financial-Dashboard-32).  
-For feedback, feel free to connect on [LinkedIn](https://www.linkedin.com/in/adithya-sai-srinivas/) or drop a ⭐ if you find it useful!
+For feedback, feel free to connect on [LinkedIn](https://www.linkedin.com/in/adithyasaisrinivas) or drop a ⭐ if you find it useful!
 
 ---
 
